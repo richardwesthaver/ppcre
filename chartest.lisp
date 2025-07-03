@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/chartest.lisp,v 1.5 2009/09/17 19:17:30 edi Exp $
 
 ;;; Copyright (c) 2008-2009, Dr. Edmund Weitz. All rights reserved.

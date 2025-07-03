@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/cl-ppcre-unicode/resolver.lisp,v 1.5 2008/07/23 02:14:08 edi Exp $
 
 ;;; Copyright (c) 2008, Dr. Edmund Weitz. All rights reserved.

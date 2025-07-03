@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/optimize.lisp,v 1.36 2009/09/17 19:17:31 edi Exp $
 
 ;;; This file contains optimizations which can be applied to converted

@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/regex-class-util.lisp,v 1.9 2009/09/17 19:17:31 edi Exp $
 
 ;;; This file contains some utility methods for REGEX objects.

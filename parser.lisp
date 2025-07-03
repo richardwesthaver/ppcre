@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/parser.lisp,v 1.31 2009/09/17 19:17:31 edi Exp $
 
 ;;; The parser will - with the help of the lexer - parse a regex

@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/test/packages.lisp,v 1.4 2009/09/17 19:17:36 edi Exp $
 
 ;;; Copyright (c) 2002-2009, Dr. Edmund Weitz. All rights reserved.
@@ -27,11 +26,7 @@
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(in-package :cl-user)
-
-(defpackage :cl-ppcre-test
-  #+genera (:shadowing-import-from :common-lisp :lambda)
-  (:use #-:genera :cl #+:genera :future-common-lisp :cl-ppcre)
-  (:import-from :cl-ppcre :*standard-optimize-settings*
-                          :string-list-to-simple-string)
-  (:export :run-all-tests :unicode-test))
+(defpackage :cl-ppcre/tests
+  (:use :cl :cl-ppcre)
+  (:import-from :cl-ppcre 
+   :*standard-optimize-settings* :string-list-to-simple-string))

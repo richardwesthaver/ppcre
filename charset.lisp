@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/charset.lisp,v 1.10 2009/09/17 19:17:30 edi Exp $
 
 ;;; A specialized set implementation for characters by Nikodemus Siivola.
@@ -48,7 +47,7 @@ initialized to #\Null except for the first one which is initialized to
   ;; since #\Null always hashes to 0, store something else there
   ;; initially, and #\Null everywhere else
   (let ((result (make-array size
-                            :element-type #-:lispworks 'character #+:lispworks 'lw:simple-char
+                            :element-type 'character
                             :initial-element (code-char 0))))
     (setf (char result 0) #\?)
     result))

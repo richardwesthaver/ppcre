@@ -1,0 +1,8 @@
+;;; cl-ppcre @ 2025-06-28.22:15:56 -*- mode:skel; -*-
+:name "cl-ppcre"
+:author "Dr. Edi Weitz"
+:version "2.1.2"
+:license "BSD"
+:vc (:hg "https://vc.compiler.company/ext/cl-ppcre"
+     (upstream (:git "https://github.com/edicl/cl-ppcre"))
+     (gh (:git "ssh://git@github.com/richardwesthaver/cl-ppcre")))

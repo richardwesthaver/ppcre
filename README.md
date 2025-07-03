@@ -1,3 +1,4 @@
+- NOTE: This is a fork of edicl/cl-ppcre which depends on cc/core.
 # CL-PPCRE - Portable Perl-compatible regular expressions for Common Lisp
 
 ## Abstract

@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/closures.lisp,v 1.45 2009/09/17 19:17:30 edi Exp $
 
 ;;; Here we create the closures which together build the final

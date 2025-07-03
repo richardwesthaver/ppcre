@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/charmap.lisp,v 1.19 2009/09/17 19:17:30 edi Exp $
 
 ;;; An optimized representation of sets of characters.

@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/lexer.lisp,v 1.35 2009/09/17 19:17:31 edi Exp $
 
 ;;; The lexer's responsibility is to convert the regex string into a
@@ -281,8 +280,7 @@ handled elsewhere."
   (declare #.*standard-optimize-settings*)
   (unless (eql (next-char-non-extended lexer) #\{)
     (signal-syntax-error* (lexer-pos lexer) "Expected left brace after \\~A." first-char))
-  (let ((name (with-output-to-string (out nil :element-type
-                                          #+:lispworks 'lw:simple-char #-:lispworks 'character)
+  (let ((name (with-output-to-string (out nil :element-type 'character)
                   (loop
                    (let ((char (or (next-char-non-extended lexer)
                                    (signal-syntax-error "Unexpected EOF after \\~A{." first-char))))

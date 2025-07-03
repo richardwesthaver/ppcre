@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/errors.lisp,v 1.22 2009/09/17 19:17:31 edi Exp $
 
 ;;; Copyright (c) 2002-2009, Dr. Edmund Weitz. All rights reserved.

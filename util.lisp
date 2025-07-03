@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/util.lisp,v 1.48 2009/10/28 07:36:15 edi Exp $
 
 ;;; Utility functions and constants dealing with the character sets we
@@ -37,11 +36,6 @@
   `(cl:defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
      ,@(when doc (list doc))))
 
-#+:lispworks
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (import 'lw:with-unique-names))
-
-#-:lispworks
 (defmacro with-unique-names ((&rest bindings) &body body)
   "Syntax: WITH-UNIQUE-NAMES ( { var | (var x) }* ) declaration* form*
 
@@ -72,12 +66,6 @@ are discarded \(that is, the body is an implicit PROGN)."
                  bindings)
          ,@body))
 
-#+:lispworks
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (setf (macro-function 'with-rebinding)
-          (macro-function 'lw:rebinding)))
-
-#-:lispworks
 (defmacro with-rebinding (bindings &body body)
   "WITH-REBINDING ( { var | (var prefix) }* ) form*
 
@@ -137,15 +125,10 @@ match [\\s] in Perl."
   "Coerces STRING to a simple STRING unless it already is one."
   (with-unique-names (=string=)
     `(let ((,=string= ,string))
-      (cond (#+:lispworks
-             (lw:simple-text-string-p ,=string=)
-             #-:lispworks
-             (simple-string-p ,=string=)
-              ,=string=)
+      (cond ((simple-string-p ,=string=)
+             ,=string=)
             (t
-             (coerce ,=string=
-                     #+:lispworks 'lw:simple-text-string
-                     #-:lispworks 'simple-string))))))
+             (coerce ,=string= 'simple-string))))))
 
 (declaim (inline nsubseq))
 (defun nsubseq (sequence start &optional (end (length sequence)))
@@ -176,9 +159,7 @@ short form of VAR-LIST."
     (dolist (string string-list)
       #-:genera (declare (string string))
       (incf total-size (length string)))
-    (let ((result-string (make-sequence #-:lispworks 'simple-string
-                                        #+:lispworks 'lw:simple-text-string
-                                        total-size))
+    (let ((result-string (make-sequence 'simple-string total-size))
           (curr-pos 0))
       (declare (fixnum curr-pos))
       (dolist (string string-list)

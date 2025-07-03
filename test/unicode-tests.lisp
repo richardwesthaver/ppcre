@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE-TEST; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/test/unicode-tests.lisp,v 1.8 2008/07/23 00:17:53 edi Exp $
 
 ;;; Copyright (c) 2008, Dr. Edmund Weitz. All rights reserved.

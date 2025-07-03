@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/cl-ppcre-unicode.asd,v 1.15 2009/09/17 19:17:30 edi Exp $
 
 ;;; This ASDF system definition was kindly provided by Marco Baringer.
@@ -28,7 +27,6 @@
 ;;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 (defsystem :cl-ppcre-unicode
   :description "Perl-compatible regular expression library (Unicode)"
   :author "Dr. Edi Weitz"
@@ -37,14 +35,14 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "resolver"))))
-  :depends-on (:cl-ppcre :cl-unicode)
+  :depends-on (:cl-ppcre :sb-unicode)
   :in-order-to ((test-op (test-op :cl-ppcre-unicode/test))))
 
 (defsystem :cl-ppcre-unicode/test
   :description "Perl-compatible regular expression library tests (Unicode)"
   :author "Dr. Edi Weitz"
   :license "BSD"
-  :depends-on (:cl-ppcre-unicode :cl-ppcre/test)
+  :depends-on (:cl-ppcre-unicode :cl-ppcre/test :rt)
   :components ((:module "test"
                         :serial t
                         :components ((:file "unicode-tests"))))

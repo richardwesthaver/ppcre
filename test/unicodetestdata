@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/test/unicodetestdata,v 1.10 2008/07/22 14:00:35 edi Exp $
 
 ;;; some arbitrary test data for Unicode properties - stolen from CL-UNICODE

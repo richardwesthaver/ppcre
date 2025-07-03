@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/convert.lisp,v 1.57 2009/09/17 19:17:31 edi Exp $
 
 ;;; Here the parse tree is converted into its internal representation
@@ -870,8 +869,7 @@ or an EVERYTHING object \(if the regex starts with something like
     (when (typep starts-with 'str)
       (setf (slot-value starts-with 'str)
               (coerce (slot-value starts-with 'str)
-                      #+:lispworks 'lw:simple-text-string
-                      #-:lispworks 'simple-string)))
+                      'simple-string)))
     (values converted-parse-tree reg-num starts-with
             ;; we can't simply use *ALLOW-NAMED-REGISTERS*
             ;; since parse-tree syntax ignores it

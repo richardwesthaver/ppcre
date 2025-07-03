@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/specials.lisp,v 1.43 2009/10/28 07:36:15 edi Exp $
 
 ;;; globally declared special variables
@@ -60,14 +59,10 @@ scanners if you don't need the \(full) Unicode support of
 implementations like AllegroCL, CLISP, LispWorks, or SBCL.")
 (declaim (fixnum *regex-char-code-limit*))
   
-(defvar *string* (make-sequence #+:lispworks 'lw:simple-text-string
-                                #-:lispworks 'simple-string
-                                0)
+(defvar *string* (make-sequence 'simple-string 0)
   "The string which is currently scanned by SCAN.
 Will always be coerced to a SIMPLE-STRING.")
-#+:lispworks
-(declaim (lw:simple-text-string *string*))
-#-:lispworks
+
 (declaim (simple-string *string*))
 
 (defvar *start-pos* 0

@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/api.lisp,v 1.85 2009/09/17 19:17:30 edi Exp $
 
 ;;; The external API for creating and using scanners.
@@ -48,7 +47,6 @@ arguments are equivalent to the imsx modifiers in Perl.  If
 DESTRUCTIVE is not NIL, the function is allowed to destructively
 modify its first argument \(but only if it's a parse tree)."))
 
-#-:use-acl-regexp2-engine
 (defmethod create-scanner ((regex-string string) &key case-insensitive-mode
                                                       multi-line-mode
                                                       single-line-mode
@@ -71,7 +69,6 @@ modify its first argument \(but only if it's a parse tree)."))
                     :single-line-mode single-line-mode
                     :destructive t)))
 
-#-:use-acl-regexp2-engine
 (defmethod create-scanner ((scanner function) &key case-insensitive-mode
                                                    multi-line-mode
                                                    single-line-mode
@@ -83,7 +80,6 @@ modify its first argument \(but only if it's a parse tree)."))
     (signal-invocation-error "You can't use the keyword arguments to modify an existing scanner."))
   scanner)
 
-#-:use-acl-regexp2-engine
 (defmethod create-scanner ((parse-tree t) &key case-insensitive-mode
                                                multi-line-mode
                                                single-line-mode
@@ -181,35 +177,6 @@ modify its first argument \(but only if it's a parse tree)."))
                                       reg-num)
                   reg-names))))))
 
-#+:use-acl-regexp2-engine
-(declaim (inline create-scanner))
-#+:use-acl-regexp2-engine
-(defmethod create-scanner ((scanner regexp::regular-expression) &key case-insensitive-mode
-                                                                     multi-line-mode
-                                                                     single-line-mode
-                                                                     extended-mode
-                                                                     destructive)
-  (declare #.*standard-optimize-settings*)
-  (declare (ignore destructive))
-  (when (or case-insensitive-mode multi-line-mode single-line-mode extended-mode)
-    (signal-invocation-error "You can't use the keyword arguments to modify an existing scanner."))
-  scanner)
-
-#+:use-acl-regexp2-engine
-(defmethod create-scanner ((parse-tree t) &key case-insensitive-mode
-                                               multi-line-mode
-                                               single-line-mode
-                                               extended-mode
-                                               destructive)
-  (declare #.*standard-optimize-settings*)
-  (declare (ignore destructive))
-  (excl:compile-re parse-tree
-                   :case-fold case-insensitive-mode
-                   :ignore-whitespace extended-mode
-                   :multiple-lines multi-line-mode
-                   :single-line single-line-mode
-                   :return :index))
-
 (defgeneric scan (regex target-string &key start end real-start-pos)
   (:documentation "Searches TARGET-STRING from START to END and tries
 to match REGEX.  On success returns four values - the start of the
@@ -253,35 +220,6 @@ internal purposes."))
            (maybe-coerce-to-simple-string target-string)
            start end))
 
-#+:use-acl-regexp2-engine
-(declaim (inline scan))
-#+:use-acl-regexp2-engine
-(defmethod scan ((parse-tree t) target-string
-                                &key (start 0)
-                                     (end (length target-string))
-                                     ((:real-start-pos *real-start-pos*) nil))
-  (declare #.*standard-optimize-settings*)
-  (when (< end start)
-    (return-from scan nil))
-  (let ((results (multiple-value-list (excl:match-re parse-tree target-string
-                                                     :start start
-                                                     :end end
-                                                     :return :index))))
-    (declare (dynamic-extent results))
-    (cond ((null (first results)) nil)
-          (t (let* ((no-of-regs (- (length results) 2))
-                    (reg-starts (make-array no-of-regs
-                                            :element-type '(or null fixnum)))
-                    (reg-ends (make-array no-of-regs
-                                          :element-type '(or null fixnum)))
-                    (match (second results)))
-               (loop for (start . end) in (cddr results)
-                     for i from 0
-                     do (setf (aref reg-starts i) start
-                              (aref reg-ends i) end))
-               (values (car match) (cdr match) reg-starts reg-ends))))))
-
-#-:cormanlisp
 (define-compiler-macro scan (&whole form regex target-string &rest rest)
   "Make sure that constant forms are compiled into scanners at compile time."
   ;; Don't pass &environment to CONSTANTP, it may not be digestable by
@@ -695,9 +633,7 @@ that \(<= START FROM TO END)."
               with current-result
               for index of-type fixnum from from below to
               for chr = (char str index)
-              do (cond ((not #-:cormanlisp (both-case-p chr)
-                             #+:cormanlisp (or (upper-case-p chr)
-                                               (lower-case-p chr)))
+              do (cond ((not #-:cormanlisp (both-case-p chr))
                          ;; this character doesn't have a case so we
                          ;; consider it as a word boundary (note that
                          ;; this differs from how \b works in Perl)
@@ -743,7 +679,6 @@ that \(<= START FROM TO END)."
 REGEX-REPLACE-ALL into a replacement template which is an
 S-expression."))
 
-#-:cormanlisp
 (let* ((*use-bmh-matchers* nil)
        (reg-scanner (create-scanner "\\\\(?:\\\\|\\{\\d+\\}|\\d+|&|`|')")))
   (defmethod build-replacement-template ((replacement-string string))
@@ -800,55 +735,6 @@ S-expression."))
   (declare #.*standard-optimize-settings*)
   replacement-list)
 
-;;; Corman Lisp's methods can't be closures... :(
-#+:cormanlisp
-(let* ((*use-bmh-matchers* nil)
-       (reg-scanner (create-scanner "\\\\(?:\\\\|\\{\\d+\\}|\\d+|&|`|')")))
-  (defun build-replacement-template (replacement)
-    (declare #.*standard-optimize-settings*)
-    (typecase replacement
-      (string
-        (let ((from 0)
-              ;; COLLECTOR will hold the (reversed) template
-              (collector '()))
-          ;; scan through all special parts of the replacement string
-          (do-matches (match-start match-end reg-scanner replacement)
-            (when (< from match-start)
-              ;; strings between matches are copied verbatim
-              (push (subseq replacement from match-start) collector))
-            ;; PARSE-START is true if the pattern matched a number which
-            ;; refers to a register
-            (let* ((parse-start (position-if #'digit-char-p
-                                             replacement
-                                             :start match-start
-                                             :end match-end))
-                   (token (if parse-start
-                            (1- (parse-integer replacement
-                                               :start parse-start
-                                               :junk-allowed t))
-                            ;; if we didn't match a number we convert the
-                            ;; character to a symbol
-                            (case (char replacement (1+ match-start))
-                              ((#\&) :match)
-                              ((#\`) :before-match)
-                              ((#\') :after-match)
-                              ((#\\) :backslash)))))
-              (when (and (numberp token) (< token 0))
-                ;; make sure we don't accept something like "\\0"
-                (signal-invocation-error "Illegal substring ~S in replacement string."
-                                         (subseq replacement match-start match-end)))
-              (push token collector))
-            ;; remember where the match ended
-            (setq from match-end))
-          (when (< from (length replacement))
-            ;; push the rest of the replacement string onto the list
-            (push (nsubseq replacement from) collector))
-          (nreverse collector)))
-      (list
-        replacement)
-      (t
-        (list replacement)))))
-        
 (defun build-replacement (replacement-template
                           target-string
                           start end
@@ -986,7 +872,7 @@ corresponding register start and end positions."
                             (end (length target-string))
                             preserve-case
                             simple-calls
-                            (element-type #+:lispworks 'lw:simple-char #-:lispworks 'character))
+                            (element-type 'character))
   "Try to match TARGET-STRING between START and END against REGEX and
 replace the first match with REPLACEMENT.  Two values are returned;
 the modified string, and T if REGEX matched or NIL otherwise.
@@ -1043,7 +929,7 @@ match.
                                 (end (length target-string))
                                 preserve-case
                                 simple-calls
-                                (element-type #+:lispworks 'lw:simple-char #-:lispworks 'character))
+                                (element-type 'character))
   "Try to match TARGET-STRING between START and END against REGEX and
 replace all matches with REPLACEMENT.  Two values are returned; the
 modified string, and T if REGEX matched or NIL otherwise.
@@ -1093,7 +979,6 @@ match.
       (values (subseq target-string start end)
               nil))))
 
-#-:cormanlisp
 (define-compiler-macro regex-replace-all
     (&whole form regex target-string replacement &rest rest)
   "Make sure that constant forms are compiled into scanners at compile time."
@@ -1102,7 +987,6 @@ match.
                              ,target-string ,replacement ,@rest))
         (t form)))
 
-#-:cormanlisp
 (defmacro regex-apropos-aux ((regex packages case-insensitive &optional return-form)
                              &body body)
   "Auxiliary macro used by REGEX-APROPOS and REGEX-APROPOS-LIST. Loops
@@ -1131,44 +1015,6 @@ scanner, a case-insensitive scanner is used."
                    ,@body)))))))))
 
 ;;; The following two functions were provided by Karsten Poeck
-
-#+:cormanlisp
-(defmacro do-with-all-symbols ((variable package-or-packagelist) &body body)
-  "Executes BODY with VARIABLE bound to each symbol in
-PACKAGE-OR-PACKAGELIST \(a designator for a list of packages) in
-turn."
-  (with-unique-names (pack-var)
-    `(if (listp ,package-or-packagelist)
-      (dolist (,pack-var ,package-or-packagelist)
-        (do-symbols (,variable ,pack-var)
-          ,@body))
-      (do-symbols (,variable ,package-or-packagelist)
-        ,@body))))
-
-#+:cormanlisp
-(defmacro regex-apropos-aux ((regex packages case-insensitive &optional return-form)
-                             &body body)
-  "Auxiliary macro used by REGEX-APROPOS and REGEX-APROPOS-LIST.
-Loops through PACKAGES and executes BODY with SYMBOL bound to each
-symbol which matches REGEX.  Optionally evaluates and returns
-RETURN-FORM at the end.  If CASE-INSENSITIVE is true and REGEX isn't
-already a scanner, a case-insensitive scanner is used."
-  (with-rebinding (regex)
-    (with-unique-names (scanner %packages hash)
-      `(let* ((,scanner (create-scanner ,regex
-                         :case-insensitive-mode
-                         (and ,case-insensitive
-                              (not (functionp ,regex)))))
-              (,%packages (or ,packages
-                             (list-all-packages)))
-              (,hash (make-hash-table :test #'eq)))
-        (do-with-all-symbols (symbol ,%packages)
-          (unless (gethash symbol ,hash)
-            (when (scan ,scanner (symbol-name symbol))
-              (setf (gethash symbol ,hash) t)
-              ,@body)))
-        ,return-form))))
-
 (defun regex-apropos-list (regex &optional packages &key (case-insensitive t))
   (declare #.*standard-optimize-settings*)
   "Similar to the standard function APROPOS-LIST but returns a list of
@@ -1208,15 +1054,10 @@ meaningful information about a symbol."
               (push (format nil "[constant]~:[~; value: ~S~]"
                             (boundp symbol) (symbol-value symbol)) output-list))
             ((boundp symbol)
-              (push #+(or :lispworks :clisp) "[variable]"
-                    #-(or :lispworks :clisp) (format nil "[variable] value: ~S"
-                                                   (symbol-value symbol))
+              (push (format nil "[variable] value: ~S"
+                            (symbol-value symbol))
                     output-list)))
-      #-(or :cormanlisp :clisp)
-      (format t "~&~S ~<~;~^~A~@{~:@_~A~}~;~:>" symbol output-list)
-      #+(or :cormanlisp :clisp)
-      (loop for line in output-list
-            do (format t "~&~S ~A" symbol line)))
+      (format t "~&~S ~<~;~^~A~@{~:@_~A~}~;~:>" symbol output-list))
     (condition ()
       ;; this seems to be necessary due to some errors I encountered
       ;; with LispWorks

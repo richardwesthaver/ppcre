@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/regex-class.lisp,v 1.44 2009/10/28 07:36:15 edi Exp $
 
 ;;; This file defines the REGEX class.  REGEX objects are used to
@@ -256,16 +255,13 @@ defined by the user."))
   (:documentation "VOID objects represent empty regular expressions."))
 
 (defmethod initialize-instance :after ((str str) &rest init-args)
+  "Automatically computes the length of a STR after initialization."
   (declare #.*standard-optimize-settings*)
   (declare (ignore init-args))
-  "Automatically computes the length of a STR after initialization."
   (let ((str-slot (slot-value str 'str)))
     (unless (typep str-slot
-                   #-:lispworks 'simple-string
-                   #+:lispworks 'lw:simple-text-string)
+                   'simple-string)
       (setf (slot-value str 'str)
-            (coerce str-slot
-                   #-:lispworks 'simple-string
-                   #+:lispworks 'lw:simple-text-string))))
-  (setf (len str) (length (str str))))
+            (coerce str-slot 'simple-string)))
+    (setf (len str) (length (str str)))))
 

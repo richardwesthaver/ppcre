@@ -42,15 +42,15 @@
                (:file "charset")
                (:file "charmap")
                (:file "chartest")
-               (:file "lexer" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "parser" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "regex-class" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "regex-class-util" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "convert" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "optimize" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "closures" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "repetition-closures" :if-feature (:not :use-acl-regexp2-engine))
-               (:file "scanner" :if-feature (:not :use-acl-regexp2-engine))
+               (:file "lexer")
+               (:file "parser")
+               (:file "regex-class")
+               (:file "regex-class-util")
+               (:file "convert")
+               (:file "optimize")
+               (:file "closures")
+               (:file "repetition-closures")
+               (:file "scanner")
                (:file "api"))
   :in-order-to ((test-op (test-op :cl-ppcre/test))))
 
@@ -58,7 +58,7 @@
   :description "Perl-compatible regular expression library tests"
   :author "Dr. Edi Weitz"
   :license "BSD"
-  :depends-on (:cl-ppcre :flexi-streams)
+  :depends-on (:cl-ppcre :rt)
   :components ((:module "test"
                         :serial t
                         :components ((:file "packages")

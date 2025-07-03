@@ -1,4 +1,3 @@
-;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-PPCRE; Base: 10 -*-
 ;;; $Header: /usr/local/cvsrep/cl-ppcre/scanner.lisp,v 1.36 2009/09/17 19:17:31 edi Exp $
 
 ;;; Here the scanner for the actual regex as well as utility scanners
@@ -304,9 +303,8 @@ ADVANCE-FN.  This is a utility macro used by CREATE-SCANNER-AUX."
                                                         *reg-starts*
                                                         *reg-ends*)))
                             ;; not yet found, increment POS
-                            #-cormanlisp (incf (the fixnum pos))
-                            #+cormanlisp (incf pos)))))))))
-    :test #'equalp))
+                            (incf (the fixnum pos))))))))))
+   :test #'equalp))
 
 (defun create-scanner-aux (match-fn
                            min-len
