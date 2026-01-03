@@ -1,9 +1,9 @@
 ;;; ~/comp/ext/cl-ppcre/cl-ppcre.sys --- CL-PPCRE System Definitions
-(defsys :cl-ppcre
+(defsys :ppcre
  :version "2.1.2"
  :description "Perl-compatible regular expression library"
- :components ((:file "packages")
-              (:file "specials")
+ :components ((:file "pkg")
+              (:file "var")
               (:file "util")
               (:file "errors")
               (:file "charset")
@@ -22,21 +22,22 @@
  :provide
  ((:tests
    :description "Perl-compatible regular expression library tests"
-   :require (:cl-ppcre :rt)
+   :require (:ppcre :rt)
    :components ((:mod "test"
-                 :components ((:file "packages")
+                 :components ((:file "pkg")
                               (:file "tests")
                               (:file "perl-tests")))))))
 
-(defsys :cl-ppcre-unicode
+(defsys :ppcre/unicode
  :description "Perl-compatible regular expression library (Unicode)"
- :components ((:mod "cl-ppcre-unicode"
-               :components ((:file "packages")
-                            (:file "resolver"))))
- :require (:cl-ppcre :sb-unicode)
+ :components ((:mod "unicode"
+               :components 
+               ((:file "packages")
+                (:file "resolver"))))
+ :require (:ppcre :sb-unicode)
  :provide 
  ((:tests
    :description "Perl-compatible regular expression library tests (Unicode)"
-   :require (:cl-ppcre-unicode :cl-ppcre/test :rt)
+   :require (:ppcre/unicode :ppcre/test :rt)
    :components ((:mod "test"
                  :components ((:file "unicode-tests")))))))

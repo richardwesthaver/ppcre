@@ -1,37 +1,9 @@
-;;; $Header: /usr/local/cvsrep/cl-ppcre/specials.lisp,v 1.43 2009/10/28 07:36:15 edi Exp $
+;;; var.lisp --- PPCRE Special Variables
 
-;;; globally declared special variables
+;;; Code:
+(in-package :ppcre)
 
-;;; Copyright (c) 2002-2009, Dr. Edmund Weitz. All rights reserved.
-
-;;; Redistribution and use in source and binary forms, with or without
-;;; modification, are permitted provided that the following conditions
-;;; are met:
-
-;;;   * Redistributions of source code must retain the above copyright
-;;;     notice, this list of conditions and the following disclaimer.
-
-;;;   * Redistributions in binary form must reproduce the above
-;;;     copyright notice, this list of conditions and the following
-;;;     disclaimer in the documentation and/or other materials
-;;;     provided with the distribution.
-
-;;; THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED
-;;; OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-;;; WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-;;; ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-;;; DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-;;; GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-;;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-(in-package :cl-ppcre)
-
-;;; special variables used to effect declarations
-
+;; special variables used to effect declarations
 (defvar *standard-optimize-settings*
   '(optimize
     speed
@@ -44,14 +16,12 @@
   '(optimize speed space)
   "Special optimize settings used only by a few declaration expressions.")
 
-;;; special variables used by the lexer/parser combo
-
+;; special variables used by the lexer/parser combo
 (defvar *extended-mode-p* nil
   "Whether the parser will start in extended mode.")
 (declaim (boolean *extended-mode-p*))
 
-;;; special variables used by the SCAN function and the matchers
-
+;; special variables used by the SCAN function and the matchers
 (defvar *regex-char-code-limit* char-code-limit
   "The upper exclusive bound on the char-codes of characters which can
 occur in character classes.  Change this value BEFORE creating
@@ -143,25 +113,3 @@ intended to handle `character properties' like \\p{IsAlpha}.  If
 (defvar *allow-named-registers* nil
   "Whether the parser should support AllegroCL's named registers
 \(?<name>\"<regex>\") and back-reference \\k<name> syntax.")
-
-(pushnew :cl-ppcre *features*)
-
-;; stuff for Nikodemus Siivola's HYPERDOC
-;; see <http://common-lisp.net/project/hyperdoc/>
-;; and <http://www.cliki.net/hyperdoc>
-;; also used by LW-ADD-ONS
-
-(defvar *hyperdoc-base-uri* "http://weitz.de/cl-ppcre/")
-
-(let ((exported-symbols-alist
-       (loop for symbol being the external-symbols of :cl-ppcre
-             collect (cons symbol
-                           (concatenate 'string
-                                        "#"
-                                        (string-downcase symbol))))))
-  (defun hyperdoc-lookup (symbol type)
-    (declare (ignore type))
-    (cdr (assoc symbol
-                exported-symbols-alist
-                :test #'eq))))
-               

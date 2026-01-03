@@ -1,40 +1,16 @@
-;;; $Header: /usr/local/cvsrep/cl-ppcre/lexer.lisp,v 1.35 2009/09/17 19:17:31 edi Exp $
+;;; lexer.lisp --- PPCRE Lexer
 
-;;; The lexer's responsibility is to convert the regex string into a
-;;; sequence of tokens which are in turn consumed by the parser.
-;;;
-;;; The lexer is aware of Perl's 'extended mode' and it also 'knows'
-;;; (with a little help from the parser) how many register groups it
-;;; has opened so far.  (The latter is necessary for interpreting
-;;; strings like "\\10" correctly.)
+;; The lexer's responsibility is to convert the regex string into a sequence
+;; of tokens which are in turn consumed by the parser.
 
-;;; Copyright (c) 2002-2009, Dr. Edmund Weitz. All rights reserved.
+;;; Commentary:
 
-;;; Redistribution and use in source and binary forms, with or without
-;;; modification, are permitted provided that the following conditions
-;;; are met:
+;; The lexer is aware of Perl's 'extended mode' and it also 'knows' (with a
+;; little help from the parser) how many register groups it has opened so far.
+;; (The latter is necessary for interpreting strings like "\\10" correctly.)
 
-;;;   * Redistributions of source code must retain the above copyright
-;;;     notice, this list of conditions and the following disclaimer.
-
-;;;   * Redistributions in binary form must reproduce the above
-;;;     copyright notice, this list of conditions and the following
-;;;     disclaimer in the documentation and/or other materials
-;;;     provided with the distribution.
-
-;;; THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED
-;;; OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-;;; WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-;;; ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-;;; DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-;;; GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-;;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-(in-package :cl-ppcre)
+;;; Code:
+(in-package :ppcre)
 
 (declaim (inline map-char-to-special-char-class))
 (defun map-char-to-special-char-class (chr)

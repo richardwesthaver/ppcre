@@ -1,38 +1,12 @@
-;;; $Header: /usr/local/cvsrep/cl-ppcre/repetition-closures.lisp,v 1.34 2009/09/17 19:17:31 edi Exp $
+;;; repetition-closures.lisp --- REPETITION Closures
 
-;;; This is actually a part of closures.lisp which we put into a
-;;; separate file because it is rather complex. We only deal with
-;;; REPETITIONs here. Note that this part of the code contains some
-;;; rather crazy micro-optimizations which were introduced to be as
-;;; competitive with Perl as possible in tight loops.
+;; This is actually a part of closures.lisp which we put into a separate file
+;; because it is rather complex. We only deal with REPETITIONs here. Note that
+;; this part of the code contains some rather crazy micro-optimizations which
+;; were introduced to be as competitive with Perl as possible in tight loops.
 
-;;; Copyright (c) 2002-2009, Dr. Edmund Weitz. All rights reserved.
-
-;;; Redistribution and use in source and binary forms, with or without
-;;; modification, are permitted provided that the following conditions
-;;; are met:
-
-;;;   * Redistributions of source code must retain the above copyright
-;;;     notice, this list of conditions and the following disclaimer.
-
-;;;   * Redistributions in binary form must reproduce the above
-;;;     copyright notice, this list of conditions and the following
-;;;     disclaimer in the documentation and/or other materials
-;;;     provided with the distribution.
-
-;;; THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED
-;;; OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-;;; WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-;;; ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-;;; DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-;;; GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-;;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-(in-package :cl-ppcre)
+;;; Code:
+(in-package :ppcre)
 
 (defmacro incf-after (place &optional (delta 1) &environment env)
   "Utility macro inspired by C's \"place++\", i.e. first return the
@@ -47,7 +21,6 @@ value of PLACE and afterwards increment it by DELTA."
         ,%temp))))
 
 ;; code for greedy repetitions with minimum zero
-
 (defmacro greedy-constant-length-closure (check-curr-pos)
   "This is the template for simple greedy repetitions (where simple
 means that the minimum number of repetitions is zero, that the inner
