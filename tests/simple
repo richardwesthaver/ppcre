@@ -1,9 +1,10 @@
-;;; $Header: /usr/local/cvsrep/cl-ppcre/test/simple,v 1.9 2008/07/23 00:48:00 edi Exp $
+;;; simple --- simple PPCRE tests
 
-;;; some simple tests for CL-PPCRE - entered manually and to be read
-;;; in the CL-PPCRE-TEST package; all forms are expected to return a
-;;; true value on success when EVALuated
+;; some simple tests for PPCRE - entered manually and to be read in
+;; the PPCRE-TEST package; all forms are expected to return a true
+;; value on success when EVALuated
 
+;;; Code:
 (equalp (multiple-value-list (scan "(a)*b" "xaaabd"))
         (list 1 5 #(3) #(4)))
 
@@ -331,13 +332,13 @@ character we're looking at is lowercase or if pos is even and the next
 two characters we're looking at are uppercase. Consume these
 characters if there's a match."
          (cond ((and (oddp pos)
-                     (< pos cl-ppcre::*end-pos*)
-                     (lower-case-p (char cl-ppcre::*string* pos)))
+                     (< pos ppcre::*end-pos*)
+                     (lower-case-p (char ppcre::*string* pos)))
                 (1+ pos))
                ((and (evenp pos)
-                     (< (1+ pos) cl-ppcre::*end-pos*)
-                     (upper-case-p (char cl-ppcre::*string* pos))
-                     (upper-case-p (char cl-ppcre::*string* (1+ pos))))
+                     (< (1+ pos) ppcre::*end-pos*)
+                     (upper-case-p (char ppcre::*string* pos))
+                     (upper-case-p (char ppcre::*string* (1+ pos))))
                 (+ pos 2))
                (t nil))))
   (let ((weird-regex `(:sequence "+" (:filter ,#'my-weird-filter) "+")))

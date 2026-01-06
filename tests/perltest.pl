@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-# $Header: /usr/local/cvsrep/cl-ppcre/test/perltest.pl,v 1.1 2008/07/06 21:24:39 edi Exp $
 
 # This is a heavily modified version of the file 'perltest' which
 # comes with the PCRE library package, which is open source software,
@@ -9,6 +8,7 @@
 # The PCRE library package is available from
 # <ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/>
 
+### Code:
 sub string_for_lisp {
   my(@a, $t, $in_string, $switch);
 

@@ -1,8 +1,8 @@
-;;; cl-ppcre @ 2025-06-28.22:15:56 -*- mode:skel; -*-
-:name "cl-ppcre"
+;;; ppcre @ 2025-06-28.22:15:56 -*- mode:skel; -*-
+:name "ppcre"
 :author "Dr. Edi Weitz"
 :version "2.1.2"
 :license "BSD"
-:vc (:hg "https://vc.compiler.company/ext/cl-ppcre"
+:vc (:hg "https://vc.compiler.company/shed/ppcre"
      (upstream (:git "https://github.com/edicl/cl-ppcre"))
-     (gh (:git "ssh://git@github.com/richardwesthaver/cl-ppcre")))
+     (gh (:git "ssh://git@github.com/richardwesthaver/ppcre")))

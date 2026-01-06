@@ -105,7 +105,7 @@ possible non-NIL values.")
 and returns unary character test functions or NIL.  This 'resolver' is
 intended to handle `character properties' like \\p{IsAlpha}.  If
 *PROPERTY-RESOLVER* is NIL, then the parser will simply treat \\p and
-\\P as #\\p and #\\P as in older versions of CL-PPCRE.")
+\\P as #\\p and #\\P as in older versions of PPCRE.")
 
 (defvar *allow-quoting* nil
   "Whether the parser should support Perl's \\Q and \\E.")

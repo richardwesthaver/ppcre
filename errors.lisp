@@ -8,7 +8,7 @@
 
 (define-condition ppcre-error (simple-error)
   ()
-  (:documentation "All errors signaled by CL-PPCRE are of
+  (:documentation "All errors signaled by PPCRE are of
 this type."))
 
 (define-condition ppcre-syntax-error (ppcre-error)
@@ -25,7 +25,7 @@ this type."))
                      (simple-condition-format-arguments condition)
                      (ppcre-syntax-error-pos condition)
                      (ppcre-syntax-error-string condition))))
-  (:documentation "Signaled if CL-PPCRE's parser encounters an error
+  (:documentation "Signaled if PPCRE's parser encounters an error
 when trying to parse a regex string or to convert a parse tree into
 its internal representation."))
 
@@ -40,7 +40,7 @@ parse tree).")
 
 (define-condition ppcre-invocation-error (ppcre-error)
   ()
-  (:documentation "Signaled when CL-PPCRE functions are
+  (:documentation "Signaled when PPCRE functions are
 invoked with wrong arguments."))
 
 (defmacro signal-syntax-error* (pos format-control &rest format-arguments)
