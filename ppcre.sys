@@ -23,8 +23,9 @@
  :provide
  ((:tests
    :description "Perl-compatible regular expression library tests"
-   :require (:ppcre :rt)
-   :components ((:mod "tests"
-                 :components ((:file "pkg")
-                              (:file "tests")
-                              (:file "perl-tests")))))))
+   :components 
+   ((:mod "tests"
+     :components 
+     ((:file "pkg")
+      (:file "tests")
+      (:file "perl-tests")))))))
