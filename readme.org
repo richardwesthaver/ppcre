@@ -1,6 +1,22 @@
 PPCRE
 - Fork of edicl/cl-ppcre
 
+#+call:project-details()
+
+#+RESULTS:
+|-------------+-----------------------------------------------------|
+| name        | ppcre                                               |
+| version     | 2.1.2                                               |
+| description | Perl-compatible regular expression library          |
+| id          | 840842844095882923                                  |
+| root        | ~/comp/core/ppcre/                                  |
+| vc          | :hg [[https://vc.compiler.company/ppcre][vc.compiler.company/ppcre]] :rev [[https://vc.compiler.company/ppcre/rev/242ec97d1d1e][242ec97d1d1e:79+]] |
+| tags        | REGEX LISP                                          |
+| updated     | Sat Feb 14 22:55:11 2026 -0500                      |
+| langs       | lisp org perl                                       |
+| lines       | 7240 :code 5612 :comment 1158 :blank 470            |
+|-------------+-----------------------------------------------------|
+
 #+begin_quote
 Copyright 2002-2009, Dr. Edmund Weitz
 

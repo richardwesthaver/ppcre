@@ -1,5 +1,7 @@
 ;;; ppcre @ 2025-06-28.22:15:56 -*- mode:skel; -*-
 :name "ppcre"
+:description "Perl-compatible regular expression library"
+:tags (regex lisp)
 :author "Dr. Edi Weitz"
 :version "2.1.2"
 :license "BSD"
