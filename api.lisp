@@ -229,7 +229,6 @@ share structure with TARGET-STRING."
                    reg-starts
                    reg-ends)))))
 
-#-:cormanlisp
 (define-compiler-macro scan-to-strings
     (&whole form regex target-string &rest rest)
   "Make sure that constant forms are compiled into scanners at compile time."
@@ -285,8 +284,8 @@ substrings may share structure with TARGET-STRING."
 
 (defmacro do-scans ((match-start match-end reg-starts reg-ends regex
                                  target-string
-                                 &optional result-form
-                                 &key start end)
+                                 &key result-form
+                                 start end)
                     &body body
                     &environment env)
   "Iterates over TARGET-STRING and tries to match REGEX as often as
@@ -345,8 +344,8 @@ declarations."
 
 (defmacro do-matches ((match-start match-end regex
                                    target-string
-                                   &optional result-form
-                                   &key start end)
+                                   &key result-form
+                                   start end)
                       &body body)
   "Iterates over TARGET-STRING and tries to match REGEX as often as
 possible evaluating BODY with MATCH-START and MATCH-END bound to the
@@ -362,14 +361,13 @@ declarations."
     `(do-scans (,match-start ,match-end
                 ,reg-starts ,reg-ends
                 ,regex ,target-string
-                ,result-form
+                :result-form ,result-form
                 :start ,start :end ,end)
       ,@body)))
 
 (defmacro do-matches-as-strings ((match-var regex
                                             target-string
-                                            &optional result-form
-                                            &key start end sharedp)
+                                            &key result-form start end sharedp)
                                  &body body)
   "Iterates over TARGET-STRING and tries to match REGEX as often as
 possible evaluating BODY with MATCH-VAR bound to the substring of
@@ -385,15 +383,15 @@ with declarations."
       `(let ((,substr-fn (if ,sharedp #'nsubseq #'subseq)))
         ;; simple use DO-MATCHES to extract the substrings
         (do-matches (,match-start ,match-end ,regex ,target-string
-                     ,result-form :start ,start :end ,end)
+                     :result-form ,result-form :start ,start :end ,end)
           (let ((,match-var
                   (funcall ,substr-fn
                            ,target-string ,match-start ,match-end)))
             ,@body))))))
 
 (defmacro do-register-groups (var-list (regex target-string
-                                              &optional result-form
-                                              &key start end sharedp)
+                                              &key result-form
+                                              start end sharedp)
                                        &body body)
   "Iterates over TARGET-STRING and tries to match REGEX as often as
 possible evaluating BODY with the variables in VAR-LIST bound to the
@@ -416,7 +414,7 @@ declarations."
                           #'subseq)))
         (do-scans (,match-start ,match-end ,reg-starts ,reg-ends
                                 ,regex ,target-string
-                                ,result-form :start ,start :end ,end)
+                                :result-form ,result-form :start ,start :end ,end)
           (let ,(loop for (function var) in (normalize-var-list var-list)
                       for counter from 0
                       when var
@@ -433,15 +431,14 @@ declarations."
 
 (defun count-matches (regex target-string
                       &key (start 0)
-                           (end (length target-string)))
+                           (end (length (the string target-string))))
   "Returns a count of all substrings of TARGET-STRING which match REGEX."
   (declare #.*standard-optimize-settings*)
   (let ((count 0))
-    (do-matches (s e regex target-string count
+    (do-matches (s e regex target-string :result-form count
                  :start start :end end)
       (incf count))))
 
-#-:cormanlisp
 (define-compiler-macro count-matches (&whole form regex &rest rest)
   "Make sure that constant forms are compiled into scanners at
 compile time."
@@ -452,7 +449,7 @@ compile time."
 
 (defun all-matches (regex target-string
                           &key (start 0)
-                               (end (length target-string)))
+                               (end (length (the string target-string))))
   "Returns a list containing the start and end positions of all
 matches of REGEX against TARGET-STRING, i.e. if there are N matches
 the list contains (* 2 N) elements.  If REGEX matches an empty string
@@ -461,12 +458,11 @@ the scan is continued one position behind this match."
   (let (result-list)
     (do-matches (match-start match-end
                  regex target-string
-                 (nreverse result-list)
+                 :result-form (nreverse result-list)
                  :start start :end end)
       (push match-start result-list)
       (push match-end result-list))))
 
-#-:cormanlisp
 (define-compiler-macro all-matches (&whole form regex &rest rest)
    "Make sure that constant forms are compiled into scanners at
 compile time."
@@ -485,11 +481,10 @@ one position behind this match. If SHAREDP is true, the substrings may
 share structure with TARGET-STRING."
   (declare #.*standard-optimize-settings*)
   (let (result-list)
-    (do-matches-as-strings (match regex target-string (nreverse result-list)
+    (do-matches-as-strings (match regex target-string :result-form (nreverse result-list)
                                   :start start :end end :sharedp sharedp)
       (push match result-list))))
 
-#-:cormanlisp
 (define-compiler-macro all-matches-as-strings (&whole form regex &rest rest)
    "Make sure that constant forms are compiled into scanners at
 compile time."
@@ -501,7 +496,7 @@ compile time."
 
 (defun split (regex target-string
                     &key (start 0)
-                         (end (length target-string))
+                         (end (length (the string target-string)))
                          limit
                          with-registers-p
                          omit-unmatched-p
@@ -528,7 +523,7 @@ structure with TARGET-STRING."
       (setq limit nil))
     (do-scans (match-start match-end
                reg-starts reg-ends
-               regex target-string nil
+               regex target-string :result-form nil
                :start start :end end)
       (unless (and (= match-start match-end)
                    (= match-start (car pos-list)))
@@ -575,7 +570,6 @@ structure with TARGET-STRING."
                               target-string this-start this-end)
                      nil)))))
 
-#-:cormanlisp
 (define-compiler-macro split (&whole form regex target-string &rest rest)
   "Make sure that constant forms are compiled into scanners at compile time."
   (cond ((constantp regex)
@@ -608,7 +602,7 @@ that \(<= START FROM TO END)."
               with current-result
               for index of-type fixnum from from below to
               for chr = (char str index)
-              do (cond ((not #-:cormanlisp (both-case-p chr))
+              do (cond ((not (both-case-p chr))
                          ;; this character doesn't have a case so we
                          ;; consider it as a word boundary (note that
                          ;; this differs from how \b works in Perl)
@@ -695,17 +689,14 @@ S-expression."))
         (push (subseq replacement-string from) collector))
       (nreverse collector))))
 
-#-:cormanlisp
 (defmethod build-replacement-template ((replacement-function function))
   (declare #.*standard-optimize-settings*)
   (list replacement-function))
 
-#-:cormanlisp
 (defmethod build-replacement-template ((replacement-function-symbol symbol))
   (declare #.*standard-optimize-settings*)
   (list replacement-function-symbol))
         
-#-:cormanlisp
 (defmethod build-replacement-template ((replacement-list list))
   (declare #.*standard-optimize-settings*)
   replacement-list)
@@ -844,7 +835,7 @@ corresponding register start and end positions."
 
 (defun regex-replace (regex target-string replacement &key
                             (start 0)
-                            (end (length target-string))
+                            (end (length (the string target-string)))
                             preserve-case
                             simple-calls
                             (element-type 'character))
@@ -887,10 +878,9 @@ match.
                            start end preserve-case
                            simple-calls element-type)
               t)
-      (values (subseq target-string start end)
+      (values (subseq (the string target-string) start end)
               nil))))
 
-#-:cormanlisp
 (define-compiler-macro regex-replace
     (&whole form regex target-string replacement &rest rest)
   "Make sure that constant forms are compiled into scanners at compile time."
@@ -901,7 +891,7 @@ match.
 
 (defun regex-replace-all (regex target-string replacement &key
                                 (start 0)
-                                (end (length target-string))
+                                (end (length (the string target-string)))
                                 preserve-case
                                 simple-calls
                                 (element-type 'character))
@@ -938,8 +928,8 @@ match.
   (let ((pos-list '())
         (reg-list '()))
     (do-scans (match-start match-end reg-starts reg-ends regex target-string
-                           nil
-                           :start start :end end)
+               :result-form nil
+               :start start :end end)
       (push match-start pos-list)
       (push match-end pos-list)
       (push reg-starts reg-list)
@@ -990,7 +980,7 @@ scanner, a case-insensitive scanner is used."
                    ,@body)))))))))
 
 ;;; The following two functions were provided by Karsten Poeck
-(defun regex-apropos-list (regex &optional packages &key (case-insensitive t))
+(defun regex-apropos-list (regex &key packages (case-insensitive t))
   (declare #.*standard-optimize-settings*)
   "Similar to the standard function APROPOS-LIST but returns a list of
 all symbols which match the regular expression REGEX.  If
@@ -1038,7 +1028,7 @@ meaningful information about a symbol."
       ;; with LispWorks
       (format t "~&~S [an error occurred while trying to print more info]" symbol))))
 
-(defun regex-apropos (regex &optional packages &key (case-insensitive t))
+(defun regex-apropos (regex &key packages (case-insensitive t))
   "Similar to the standard function APROPOS but returns a list of all
 symbols which match the regular expression REGEX.  If CASE-INSENSITIVE
 is true and REGEX isn't already a scanner, a case-insensitive scanner
