@@ -9,10 +9,10 @@ PPCRE
 | version     | 2.1.2                                              |
 | description | Perl-compatible regular expression library         |
 | id          | 840842844095882923                                 |
-| root        | ~/comp/core/ppcre/                                 |
-| vc          | :hg [[https://vc.compiler.company/ppcre][vc.compiler.company/ppcre]] :rev [[https://vc.compiler.company/ppcre/rev/7d2123898ac1][7d2123898ac1:81]] |
+| root        | ~/src/core/ppcre/                                  |
+| vc          | :hg [[https://vc.compiler.company/ppcre][vc.compiler.company/ppcre]] :rev [[https://vc.compiler.company/ppcre/rev/004c0c080f48][004c0c080f48:82]] |
 | tags        | REGEX LISP                                         |
-| updated     | Fri Mar 06 20:29:14 2026 -0500                     |
+| updated     | Sat Apr 25 19:49:22 2026 -0400                     |
 | langs       | lisp org perl                                      |
 | lines       | 7230 :code 5602 :comment 1158 :blank 470           |
 |-------------+----------------------------------------------------|
